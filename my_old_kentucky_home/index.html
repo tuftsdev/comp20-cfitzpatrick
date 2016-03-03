@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>My Old Kentucky Home</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+<h1 id="title">My Old Kentucky Home</h1>
+
+<video src="https://www.cs.tufts.edu/comp/20/my_old_kentucky_home.mp4" id="music_video" controls></video>
+<div id="lyrics"></div>
+
+<script>
+
+        var video = document.getElementById("music_video");
+        var lyrics = document.getElementById("lyrics");
+
+        video.addEventListener("timeupdate", function(){
+
+                if (video.currentTime < 33){
+                        lyrics.innerHTML = "<p>The sun shines bright in My Old Kentucky Home,</p><p>'Tis summer, the people are gay; </p><p> The corn-top's ripe and the meadow's in the bloom </p><p> While the birds make music all the day.</p><p><img src='http://www.howrse.com/media/equideo/image/chevaux/adulte/americain/normal/300/bai_v1828806360.png' alt= 'Horse Picture' height = '250' width= '250'></p>";
+                }
+                if (video.currentTime > 33 && video.currentTime < 63)
+                        lyrics.innerHTML = "<p>The young folks roll on the little cabin floor,</p><p>All merry, all happy and bright;</p><p>By 'n' by hard times comes a knocking at the door,</p>Then My Old Kentucky Home, good night!<p><img src='https://ewvox.files.wordpress.com/2014/09/episode-11-diane-patty.png' alt= 'Horse Picture' height = '250' width= '250'></p>";
+                if (video.currentTime > 63)
+                        lyrics.innerHTML = "<p>Weep no more my lady</p><p>Oh weep no more today;</p><p>We will sing one song</p><p>For My Old Kentucky Home</p>For My Old Kentucky Home, far away/p>";
+        }, false);
+
+</script>
+</body>
+</html> 
