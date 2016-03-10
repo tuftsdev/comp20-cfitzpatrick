@@ -7,14 +7,10 @@ function parse(){
         request.onreadystatechange = makeCall;
 
         request.send(null);
-        console.log("at 10");
-        
 
         function makeCall (){
-                console.log("at 12");
 
                 if (request.readyState == 4 && request.status == 200){
-                        console.log("at 14");
                         result = "";
                         rawResponse = request.responseText;
                         messageData = JSON.parse(rawResponse);
