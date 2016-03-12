@@ -1,0 +1,14 @@
+h1{
+
+        text-align: center;
+}
+
+#the_map{
+        height: 100%;
+}
+
+html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Landmarks</title>
+                <link rel="stylesheet" href="stylesheet.css" type="text/css"/>
+                <h1> TESTING </h1>
+                <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+                <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
+                <meta content="utf-8" http-equiv="encoding">
+
+                <script type="text/javascript">
+
+                                var myLat = 0;
+                                var myLng = 0;
+
+                                var request = new XMLHttpRequest();
+                                var me = new google.maps.LatLng(myLat, myLng);
+
+                                var map;
+
+                                var infowindow = new google.maps.InfoWindow();
+
+                                var myOptions = {
+                                        zoom: 14,
+                                        center: me,
+                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                                };
+
+                        function init(){
+
+                                if (!navigator.geolocation){
+                                        console.log("NOT SUPPORTED");
+                                }
+                                
+                                else{
+                                        navigator.geolocation.getCurrentPosition(success, fail);
+                                }
+
+                                function success(position){
+                                        var loc = position.coords;
+                                        myLat = loc.latitude;
+                                        myLng = loc.longitude;
+                                        render();
+                                };
+
+                                function fail(error){
+                                        console.warn('ERROR(' + error.code + '): ' + error.message);
+                                };
+                        }
+
+                        function render(){
+                                console.log("creating with: " + myLat);
+                                
+                                me = new google.maps.LatLng(myLat, myLng);
+                                
+                                myOptions = {
+                                        zoom: 14,
+                                        center: me,
+                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                                };
+        
+                                map = new google.maps.Map(document.getElementById("the_map"), myOptions);
+
+
+                                marker = new google.maps.Marker({
+                                        position: me,
+                                        title: "Here I Am!"
+                                });
+
+                                marker.setMap(map);
+
+                                google.maps.event.addListener(marker, 'click', function() {
+                                        infowindow.setContent(marker.title);
+                                        infowindow.open(map, marker);
+                                })
+
+                                map.panTo(me);
+                        }
+
+                </script>
+
+
+        </head>
+
+        <body>
+
+                <p><button onclick="init()">create map</button></p>
+
+                <div id="the_map"></div>
+
+                
+
+        </body>
+</html>
