@@ -1,6 +1,7 @@
 h1{
 
         text-align: center;
+        background-color: #ff9900;
 }
 
 #the_map{
@@ -11,4 +12,4 @@ html, body {
         height: 100%;
         margin: 0;
         padding: 0;
-      }
+}

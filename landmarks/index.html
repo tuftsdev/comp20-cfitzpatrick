@@ -3,30 +3,35 @@
         <head>
                 <title>Landmarks</title>
                 <link rel="stylesheet" href="stylesheet.css" type="text/css"/>
-                <h1> TESTING </h1>
+                <h1> Landmarks  </h1>
                 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
                 <meta content="utf-8" http-equiv="encoding">
 
                 <script type="text/javascript">
 
-                                var myLat = 0;
-                                var myLng = 0;
+                        var myLat = 0;
+                        var myLng = 0;
+                        var request = new XMLHttpRequest();
+                        var me = new google.maps.LatLng(myLat, myLng);
+                        var map;
+                        raw = "";
 
-                                var request = new XMLHttpRequest();
-                                var me = new google.maps.LatLng(myLat, myLng);
+                        var infowindow = new google.maps.InfoWindow();
 
-                                var map;
-
-                                var infowindow = new google.maps.InfoWindow();
-
-                                var myOptions = {
-                                        zoom: 14,
-                                        center: me,
-                                        mapTypeId: google.maps.MapTypeId.ROADMAP
-                                };
+                        var myOptions = {
+                                zoom: 14,
+                                center: me,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
 
                         function init(){
+
+                                console.log("begginning of init");
+                                loadMap();
+                        }
+
+                        function loadMap(){
 
                                 if (!navigator.geolocation){
                                         console.log("NOT SUPPORTED");
@@ -41,6 +46,8 @@
                                         myLat = loc.latitude;
                                         myLng = loc.longitude;
                                         render();
+                                        sendAndReceieve();
+
                                 };
 
                                 function fail(error){
@@ -49,8 +56,7 @@
                         }
 
                         function render(){
-                                console.log("creating with: " + myLat);
-                                
+                                console.log("render line 1");
                                 me = new google.maps.LatLng(myLat, myLng);
                                 
                                 myOptions = {
@@ -77,14 +83,66 @@
                                 map.panTo(me);
                         }
 
+                        function sendAndReceieve(){
+
+                                console.log("in send and receive lat: " + myLat + " lng: " + myLng);
+
+                                request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation?login=MANUELA_ACEVEDO&lat=" + myLat +"&lng=" + myLng, true);
+
+                                request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                console.log("here");
+
+                                request.onreadystatechange = handleResponse;
+
+                                request.send("login=MANUELA_ACEVEDO&lat=" + myLat + "&lng=" + myLng);
+                        }
+
+                        function handleResponse(){
+
+                                console.log("in reponse handling");
+                                
+                                if (request.readyState == 4 && request.status == 200){
+                                        result = "";
+                                        raw += request.response;
+                                        console.log("response was: " + raw);
+                                        data = JSON.parse(raw);
+                                        for (i = 0; i < data["people"].length; i++){
+                                                currLat = data["people"][i]["lat"];
+                                                currLng = data["people"][i]["lng"];
+                                                temp = currLng + currLat;
+                                                console.log(temp);
+                                                currPos = new google.maps.LatLng(currLat, currLng);
+
+                                                newMark = new google.maps.Marker({
+                                                        position: currPos,
+                                                        title: data["people"][i]["login"]
+                                                })
+                                                newMark.setMap(map);
+
+                                                google.maps.event.addListener(newMark, 'click', function() {
+                                                infowindow.setContent(newMark.title);
+                                                infowindow.open(map, newMark);
+                                                })
+                                        }
+        
+                                       for (i = 0; i < data["landmarks"].length; i++){
+
+                                        }
+                                }
+                                
+                                else if (request.readyState == 4 && request.status != 200){
+                                        console.log("SOMETHING WENT WRONG WITH THE REQUST");
+                                }
+
+
+                        }
+
                 </script>
 
 
         </head>
 
-        <body>
-
-                <p><button onclick="init()">create map</button></p>
+        <body onload="init()">
 
                 <div id="the_map"></div>
 
