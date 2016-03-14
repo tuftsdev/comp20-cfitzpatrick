@@ -106,35 +106,65 @@
                                         raw += request.response;
                                         console.log("response was: " + raw);
                                         data = JSON.parse(raw);
+                                        var markers = [];
                                         for (i = 0; i < data["people"].length; i++){
                                                 currLat = data["people"][i]["lat"];
                                                 currLng = data["people"][i]["lng"];
-                                                temp = currLng + currLat;
-                                                console.log(temp);
+
                                                 currPos = new google.maps.LatLng(currLat, currLng);
-
-                                                newMark = new google.maps.Marker({
-                                                        position: currPos,
-                                                        title: data["people"][i]["login"]
-                                                })
-                                                newMark.setMap(map);
-
-                                                google.maps.event.addListener(newMark, 'click', function() {
-                                                infowindow.setContent(newMark.title);
-                                                infowindow.open(map, newMark);
-                                                })
+                                                addPerson(currPos);
                                         }
         
                                        for (i = 0; i < data["landmarks"].length; i++){
 
+                                                currLat = data["landmarks"][i]["geometry"]["coordinates"][1];
+                                                currLng = data["landmarks"][i]["geometry"]["coordinates"][0];
+                                                currPos = new google.maps.LatLng(currLat, currLng);
+
+                                                addFeature(currPos);
                                         }
                                 }
                                 
                                 else if (request.readyState == 4 && request.status != 200){
                                         console.log("SOMETHING WENT WRONG WITH THE REQUST");
                                 }
+                        }
 
+                        function addFeature(currPos){
 
+                                image = "https://cdn3.iconfinder.com/data/icons/location-vol-2/128/location-27-32.png";
+
+                                var currMarker = new google.maps.Marker({
+                                        position: currPos,
+                                        title: data["landmarks"][i]["properties"]["Location_Name"],
+                                        icon: image
+                                });
+
+                                currMarker.setMap(map);
+
+                                google.maps.event.addListener(currMarker, 'click', function() {
+                                infowindow.setContent(currMarker.title);
+                                infowindow.open(map, currMarker);
+                                })
+                        }
+
+                        function addPerson(currPos){
+                                
+                                image = "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0";
+
+                                var currMarker = new google.maps.Marker({
+                                        position: currPos,
+                                        title: data["people"][i]["login"],
+                                        icon: image,
+                                        clickable: true
+                                });
+
+                                currMarker.setMap(map);
+
+                                google.maps.event.addListener(currMarker, 'click', function() {
+                                infowindow.setContent(currMarker.title);
+                                infowindow.open(map, currMarker);
+                                })
                         }
 
                 </script>
