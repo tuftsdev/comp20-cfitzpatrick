@@ -26,10 +26,6 @@
                                 mapTypeId: google.maps.MapTypeId.ROADMAP
                         };
 
-                        function init(){
-
-                                loadMap();
-                        }
 
                         function loadMap(){
 
@@ -87,7 +83,7 @@
                                 console.log("in reponse handling");
                                 
                                 if (request.readyState == 4 && request.status == 200){
-                                        result = "";
+
                                         raw += request.response;
                                         console.log(raw);
                                         data = JSON.parse(raw);
@@ -97,6 +93,7 @@
                                                 currLat = data["people"][i]["lat"];
                                                 currLng = data["people"][i]["lng"];
 
+                                                //don't add myself to the map
                                                 if (data["people"][i]["login"] == "MANUELA_ACEVEDO")
                                                     continue;
 
@@ -104,6 +101,7 @@
                                                 addPerson(currPos);
                                         }
                                         
+                                        //marks first user
                                         minDist = -1;
 
                                         closeName = "";
@@ -121,9 +119,6 @@
                                                         minDist = currDistance;
                                                 }
                                         }
-                                        console.log("closeName is : " + closeName);
-                                        console.log("closePos.lng: " + closePos.lng());
-
 
                                         titleString += ". The closest landmark is " + closeName + " and it is " + minDist + " miles away.";
                                         addMyself();
@@ -158,6 +153,8 @@
                                 
                                 image = "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0";
                                 currDistance = 0;
+                                
+                                //updates currDistance
                                 getDistance();
 
                                 var currMarker = new google.maps.Marker({
@@ -175,6 +172,7 @@
                                 })
                         }
 
+                        //CREDIT: http://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript
                         function getDistance(){
                             
                                 Number.prototype.toRad = function() {
@@ -215,8 +213,9 @@
                                 addLine();
                         }
 
+                        //draw a polyline between you and the nearest landmark
                         function addLine(){
-                                var lineCoordinates = [ 
+                                var lineCoordinates = [
                                         {lat: myLat, lng: myLng},
                                         {lat: closePos.lat(), lng: closePos.lng()}
                                         ];
@@ -234,7 +233,7 @@
                 </script>
         </head>
 
-        <body onload="init()">
+        <body onload="loadMap()">
                 <div id="the_map"></div>
         </body>
 </html>
