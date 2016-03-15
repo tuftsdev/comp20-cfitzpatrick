@@ -27,7 +27,6 @@
 
                         function init(){
 
-                                console.log("begginning of init");
                                 loadMap();
                         }
 
@@ -70,7 +69,7 @@
 
                                 marker = new google.maps.Marker({
                                         position: me,
-                                        title: "Here I Am!"
+                                        title: "My Name is MANUELA_ACEVEDO!"
                                 });
 
                                 marker.setMap(map);
@@ -84,8 +83,6 @@
                         }
 
                         function sendAndReceieve(){
-
-                                console.log("in send and receive lat: " + myLat + " lng: " + myLng);
 
                                 request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation?login=MANUELA_ACEVEDO&lat=" + myLat +"&lng=" + myLng, true);
 
@@ -104,25 +101,39 @@
                                 if (request.readyState == 4 && request.status == 200){
                                         result = "";
                                         raw += request.response;
-                                        console.log("response was: " + raw);
+                                        console.log(raw);
                                         data = JSON.parse(raw);
                                         var markers = [];
+
                                         for (i = 0; i < data["people"].length; i++){
                                                 currLat = data["people"][i]["lat"];
                                                 currLng = data["people"][i]["lng"];
 
+                                                if (data["people"][i]["login"] == "MANUELA_ACEVEDO")
+                                                    continue;
+
                                                 currPos = new google.maps.LatLng(currLat, currLng);
                                                 addPerson(currPos);
                                         }
-        
-                                       for (i = 0; i < data["landmarks"].length; i++){
+                                        
+                                        minDist = -1;
+
+                                        closeName = "";
+                                        for (i = 0; i < data["landmarks"].length; i++){
 
                                                 currLat = data["landmarks"][i]["geometry"]["coordinates"][1];
                                                 currLng = data["landmarks"][i]["geometry"]["coordinates"][0];
                                                 currPos = new google.maps.LatLng(currLat, currLng);
 
                                                 addFeature(currPos);
+
+                                                if (minDist == -1 || currDistance < minDist){
+                                                        closePos = new google.maps.LatLng(currLat, currLng);
+                                                        closeName = data["landmarks"][i]["properties"]["Location_Name"];
+                                                        minDist = currDistance;
+                                                }
                                         }
+                                        console.log("closeName is : " + closeName);
                                 }
                                 
                                 else if (request.readyState == 4 && request.status != 200){
@@ -133,10 +144,12 @@
                         function addFeature(currPos){
 
                                 image = "https://cdn3.iconfinder.com/data/icons/location-vol-2/128/location-27-32.png";
+                                currDistance = 0;
+                                getDistance();
 
                                 var currMarker = new google.maps.Marker({
                                         position: currPos,
-                                        title: data["landmarks"][i]["properties"]["Location_Name"],
+                                        title: "This is: " + data["landmarks"][i]["properties"]["Location_Name"] + ". It is: " + currDistance + " from you.",
                                         icon: image
                                 });
 
@@ -151,10 +164,12 @@
                         function addPerson(currPos){
                                 
                                 image = "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0";
+                                currDistance = 0;
+                                getDistance();
 
                                 var currMarker = new google.maps.Marker({
                                         position: currPos,
-                                        title: data["people"][i]["login"],
+                                        title: data["people"][i]["login"] + " is: " + currDistance + " miles away.",
                                         icon: image,
                                         clickable: true
                                 });
@@ -167,16 +182,33 @@
                                 })
                         }
 
+                        function getDistance(){
+                            
+                            Number.prototype.toRad = function() {
+                                   return this * Math.PI / 180;
+                            }
+
+                            var lat2 = currLat; 
+                            var lon2 = currLng; 
+                            var lat1 = myLat; 
+                            var lon1 = myLng;
+                            var R = 6371; // km 
+                            //has a problem with the .toRad() method below.
+                            var x1 = lat2-lat1;
+                            var dLat = x1.toRad();  
+                            var x2 = lon2-lon1;
+                            var dLon = x2.toRad();  
+                            var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+                            Math.sin(dLon/2) * Math.sin(dLon/2);  
+                            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+                            currDistance = R * c;
+                        }
+
                 </script>
-
-
         </head>
 
         <body onload="init()">
-
                 <div id="the_map"></div>
-
-                
-
         </body>
 </html>
