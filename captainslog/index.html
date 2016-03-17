@@ -5,8 +5,8 @@
 <head>
         <title>Captain's Log</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        
         <script>
-
         $(document).ready(function() {
 
                 $("#msg").keyup(function(e) {
@@ -18,16 +18,19 @@
                         
                         if (len == null)
                             len = 0;
-
+                        
+                        //get the item and store the desired format for a message
                         var input =  $("#msg").val();
                         var today = new Date();
                         localStorage.setItem("message_" + len, "<p>" + today + " - " + input + "</p>");
                         console.log(localStorage.getItem(i));
                         $("#msg").val('');
 
+                        //this needs to be a number, now
                         if (len != "0")
                             len = parseInt(len);
                         
+                        //loop backwards (most recent to begin with) and print to log
                         log.innerHTML = "";
                         for (var i = len; i >= 0; i--){
                             log.innerHTML += localStorage.getItem("message_" + i);
@@ -36,10 +39,8 @@
                         len ++;
                         localStorage.setItem("length", len);
                     }
-
                 })
         });
-        
         </script>
 </head>
 
