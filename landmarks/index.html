@@ -68,13 +68,13 @@
 
                         function sendAndReceieve(){
 
-                                request.open("POST", "https://cherry-crumble-93235.herokuapp.com/sendLocation?login=Chris&lat=" + myLat +"&lng=" + myLng, true);
+                                request.open("POST", "https://cherry-crumble-93235.herokuapp.com/sendLocation?login=MANUELA_ACEVEDO&lat=" + myLat +"&lng=" + myLng, true);
 
                                 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
                                 request.onreadystatechange = handleResponse;
 
-                                request.send("login=Chris&lat=" + myLat + "&lng=" + myLng);
+                                request.send("login=MANUELA_ACEVEDO&lat=" + myLat + "&lng=" + myLng);
                         }
 
                         function handleResponse(){
