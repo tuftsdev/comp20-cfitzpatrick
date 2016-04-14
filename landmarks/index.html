@@ -16,7 +16,7 @@
                         var me = new google.maps.LatLng(myLat, myLng);
                         var map;
                         raw = "";
-                        titleString = "My name is MANUELA_ACEVEDO";
+                        titleString = "My name is Chris";
 
                         var infowindow = new google.maps.InfoWindow();
 
@@ -68,13 +68,13 @@
 
                         function sendAndReceieve(){
 
-                                request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation?login=MANUELA_ACEVEDO&lat=" + myLat +"&lng=" + myLng, true);
+                                request.open("POST", "https://cherry-crumble-93235.herokuapp.com/sendLocation?login=Chris&lat=" + myLat +"&lng=" + myLng, true);
 
                                 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
                                 request.onreadystatechange = handleResponse;
 
-                                request.send("login=MANUELA_ACEVEDO&lat=" + myLat + "&lng=" + myLng);
+                                request.send("login=Chris&lat=" + myLat + "&lng=" + myLng);
                         }
 
                         function handleResponse(){
@@ -122,7 +122,13 @@
                                 
                                 else if (request.readyState == 4 && request.status != 200){
                                         console.log("SOMETHING WENT WRONG WITH THE REQUST");
+                                        console.log("RS: " + request.readyState + " status: " + request.status);
                                 }
+                                console.log
+                                if (request.status == 110)
+                                    console.log("RESPONSE IS 110");
+                                if (request.status == 120)
+                                    console.log("RESPONSE IS 120");
                         }
 
                         function addFeature(currPos){
