@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Landmarks</title>
+                <link rel="stylesheet" href="stylesheet.css" type="text/css"/>
+                <h1> Landmarks  </h1>
+                <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+                <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
+                <meta content="utf-8" http-equiv="encoding">
+
+                <script type="text/javascript">
+
+                    
+                        function loadMap(){
+
+                                
+
+                        }
+
+                        
+
+                        function sendAndReceive(){
+                                 request = new XMLHttpRequest();
+                                
+                                console.log("sendAndReceieve starting");
+
+                                request.open("GET", "https://im-down.herokuapp.com/getEventInfo.json?event_id=5729ddbd1f1a640300358958", true);
+
+                                request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                                request.onreadystatechange = handleResponse;
+
+                                request.send();
+                        }
+
+                        function handleResponse(){
+
+                                if (request.readyState == 4 && request.status == 200){
+                                        var raw = request.response;
+                                        console.log(raw);
+                                        var parsed = JSON.parse(raw);
+                                        console.log(parsed.eventinfo[0].place_id);
+                                }
+                                
+                                else if (request.readyState == 4 && request.status != 200){
+                                        console.log("SOMETHING WENT WRONG WITH THE REQUST");
+                                        console.log("RS: " + request.readyState + " status: " + request.status);
+                                }
+                        }
+
+                </script>
+        </head>
+
+        <body onload="sendAndReceive()">
+                <div id="the_map"></div>
+        </body>
+</html>
